@@ -2,7 +2,7 @@
   "name": "better-prettier",
   "displayName": "Better Prettier",
   "description": "Code formatter using prettier. Made in even better way!",
-  "version": "9.0.2",
+  "version": "0.0.0-dev",
   "publisher": "zardoy",
   "galleryBanner": {
     "color": "#ffe04b",
