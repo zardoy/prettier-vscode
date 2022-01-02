@@ -1,4 +1,5 @@
-import { commands, ExtensionContext, workspace } from "vscode";
+import { extensionCtx, getExtensionId } from "vscode-framework";
+import { commands, ExtensionContext, extensions, workspace } from "vscode";
 import { createConfigFile } from "./commands";
 import { LoggingService } from "./LoggingService";
 import { ModuleResolver } from "./ModuleResolver";
@@ -9,15 +10,22 @@ import { getConfig } from "./util";
 import { RESTART_TO_ENABLE, EXTENSION_DISABLED } from "./message";
 import { setGlobalState, setWorkspaceState } from "./stateUtils";
 
-// the application insights key (also known as instrumentation key)
-const extensionName = process.env.EXTENSION_NAME || "dev.prettier-vscode";
-const extensionVersion = process.env.EXTENSION_VERSION || "0.0.0";
-
-export function activate(context: ExtensionContext) {
+export function activate() {
+  const conflictingExtensions = ["esbenp.prettier-vscode"];
+  const conflictingExtension = extensions.all.find(({ id }) => {
+    return conflictingExtensions.includes(id);
+  });
+  if (conflictingExtension)
+    throw new Error(
+      `Found conflicting extension: ${conflictingExtension.id}. Disable it first.`
+    );
   const loggingService = new LoggingService();
+  const context = extensionCtx;
 
-  loggingService.logInfo(`Extension Name: ${extensionName}.`);
-  loggingService.logInfo(`Extension Version: ${extensionVersion}.`);
+  loggingService.logInfo(`Extension Name: ${getExtensionId(true)}.`);
+  loggingService.logInfo(
+    `Extension Version: ${context.extension.packageJSON.version}.`
+  );
 
   const { enable, enableDebugLogs } = getConfig();
 

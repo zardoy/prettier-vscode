@@ -1,5 +1,6 @@
 out
 dist
+src/generated.ts
 node_modules
 .vscode-test
 .vscode-test-web
